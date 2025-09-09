@@ -1,0 +1,245 @@
+/* Общие стили для страницы */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f5f7;
+    color: #333;
+}
+
+/* Стили для заголовков */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+    color: #444;
+    margin: 20px 0;
+    text-align: center;
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* Стили для ссылок */
+a {
+    color: #0079bf;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #0056b3;
+}
+
+/* Стили для контейнера */
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+#board {
+  display: flex;
+  gap: 20px;
+  align-items: start;
+}
+
+.column {
+  background-color: #ebecf0;
+  border-radius: 8px;
+  padding: 10px;
+  width: 250px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.column h3 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+}
+
+.cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  min-height: 50px;
+  border: 2px dashed transparent;
+  padding: 5px;
+  transition: border 0.3s ease;
+}
+
+.placeholder {
+  color: #999;
+  font-size: 14px;
+  font-style: italic;
+  padding: 10px;
+  text-align: center;
+  pointer-events: none;
+}
+
+.cards-container.dragover {
+  border: 2px dashed #0079bf;
+}
+
+.card {
+  font-size: 14px;
+  position: relative;
+  background-color: white;
+  border-radius: 6px;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: grab;
+  transition: background-color 0.2s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  background-color: #f0f0f0;
+  box-shadow: 0 0 0 2px rgba(0, 121, 191, 0.5);
+}
+
+.card:active {
+  cursor: grabbing;
+}
+
+.add-card-button {
+  background-color: #0079bf;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 7px;
+}
+
+.add-card-button:hover {
+  background-color: #005ea2;
+}
+
+.delete-card, .edit-card {
+  position: absolute;
+  top: 4px;
+  width: 20px;
+  height: 20px;
+  padding: 0px;
+  line-height: 1;
+  border-radius: 50%;
+  background-color: transparent;
+  border: none;
+  color: #999;
+  font-size: 14px;
+  cursor: pointer;
+  display: none;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.edit-card {
+  right: 26px;
+}
+
+.delete-card {
+  right: 6px;
+}
+
+.card:hover .delete-card,
+.card:hover .edit-card {
+  display: block;
+}
+
+.delete-card:hover{
+  color: red;
+  background-color: white;
+}
+
+.edit-card:hover { 
+  color: #0079bf; 
+  background-color: white;
+}
+
+.edit-input {
+  width: 75%;
+  padding: 6px;
+  font-size: 14px;
+  border: 1px solid #0079bf;
+  border-radius: 4px;
+  outline: none;
+}
+
+.edit-input:focus {
+  border-color: #005ea2;
+}
+
+.hide {
+  display: none;
+}
+
+.drag-placeholder {
+    height: 40px;
+    background-color: rgba(0, 121, 191, 0.08);
+    border-radius: 6px;
+    margin: 5px 0;
+}
+
+.add-card-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background-color: white;
+    border-radius: 6px;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 7px;
+}
+
+.input-for-new-card {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease;
+}
+
+.input-for-new-card:focus {
+    outline: none;
+    border-color: #0079bf;
+}
+
+.add-card-buttons-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.add-card-btn-ok {
+    background-color: #0079bf;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-card-btn-ok:hover {
+    background-color: #005ea2;
+}
+
+.add-card-btn-cancel {
+    background: none;
+    border: none;
+    color: #555;
+    font-size: 20px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    padding: 3px 8px;
+    border-radius: 4px;
+}
+
+.add-card-btn-cancel:hover {
+    color: #e55353;
+    background-color: rgba(229, 83, 83, 0.1);
+}
