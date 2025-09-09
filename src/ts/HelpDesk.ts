@@ -1,10 +1,15 @@
-// HelpDesk.js
+// HelpDesk.ts
+
+import TicketService from './TicketService';
 
 /**
  *  Основной класс приложения
  * */
 export default class HelpDesk {
-  constructor(container, ticketService) {
+  container: HTMLElement;
+  ticketService: TicketService;
+
+  constructor(container: HTMLElement, ticketService: TicketService) {
     if (!(container instanceof HTMLElement)) {
       throw new Error('This is not HTML element!');
     }
@@ -12,7 +17,7 @@ export default class HelpDesk {
     this.ticketService = ticketService;
   }
 
-  init() {
+  init(): void {
     console.info('init');
   }
 }
