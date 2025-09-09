@@ -1,7 +1,15 @@
-// Ticket.js
+// Ticket.ts
+
+import { TicketData } from "./interface";
 
 export default class Ticket {
-  constructor({ id, name, description, status, created }) {
+  id: string;
+  name: string;
+  description: string;
+  status: boolean;
+  created: number;
+
+  constructor({ id, name, description, status, created }: TicketData) {
     this.id = id;
     this.name = name;
     this.description = description;

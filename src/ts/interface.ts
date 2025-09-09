@@ -6,3 +6,11 @@ export interface RequestOptions {
   params?: { [key: string]: any };
   data?: any;
 }
+
+export interface TicketData {
+  id: string;
+  name: string;
+  description: string;
+  status: boolean;
+  created: number;
+}
