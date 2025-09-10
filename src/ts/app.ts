@@ -1,16 +1,24 @@
 // app.ts
 
-import HelpDesk from './HelpDesk';
-import TicketService from './TicketService';
+import HelpDesk from "./HelpDesk";
+import TicketService from "./TicketService";
 
-const root = document.getElementById('root') as HTMLElement;
+const root = document.getElementById("root") as HTMLElement;
 
 // Добавим проверку на существование элемента root
-if(root) {
-  const ticketService = new TicketService();
+if (root) {
+  // Создаем экземпляр TicketService, передавая адрес сервера
+  const ticketService = new TicketService("http://localhost:7070");
+
+  // Создаем экземпляр HelpDesk
   const app = new HelpDesk(root, ticketService);
-  
+
   app.init();
+
+  // Вызываем list() для проверки
+  ticketService.list(() => {
+    console.log("Метод list() вызван.");
+  });
 } else {
-  console.error('root элемент в index.html не найден!');
+  console.error("root элемент в index.html не найден!");
 }
