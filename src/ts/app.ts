@@ -2,7 +2,7 @@
 
 import HelpDesk from "./HelpDesk";
 import TicketService from "./TicketService";
-import "./test";
+// import "./test";
 
 const root = document.getElementById("root") as HTMLElement;
 
@@ -17,9 +17,9 @@ if (root) {
   app.init();
 
   // Вызываем list() для проверки
-  ticketService.list(() => {
-    console.log("Метод list() вызван.");
-  });
+  // ticketService.list(() => {
+  //   console.log("Метод list() вызван.");
+  // });
 } else {
   console.error("root элемент в index.html не найден!");
 }
