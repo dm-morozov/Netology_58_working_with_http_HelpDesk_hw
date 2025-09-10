@@ -2,6 +2,7 @@
 
 import HelpDesk from "./HelpDesk";
 import TicketService from "./TicketService";
+import "./test";
 
 const root = document.getElementById("root") as HTMLElement;
 

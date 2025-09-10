@@ -5,18 +5,18 @@ import { RequestOptions } from "../interface";
 const createRequest = async (
   options: RequestOptions = { url: "" },
 ): Promise<unknown> => {
-  console.log("Параметры, переданные в createRequest:", options);
+  // console.log("Параметры, переданные в createRequest:", options);
 
   const { url, method, params, data } = options;
 
   const urlWithParams = new URL(url);
   if (params) {
     Object.keys(params).forEach((key) => {
-      urlWithParams.searchParams.append(key, params[key]);
+      urlWithParams.searchParams.append(key, params[key] as string);
     });
   }
 
-  console.log("Сформированный URL:", urlWithParams.href);
+  // console.log("Сформированный URL:", urlWithParams.href);
 
   // создадим объект опций для fetch с методом и телом запроса и заголовками
   //  RequestInit - встроенный тип TypeScript, который

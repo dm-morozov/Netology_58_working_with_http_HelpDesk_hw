@@ -1,14 +1,22 @@
-// server.js
-
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import * as crypto from "crypto";
-import pino from 'pino';
-import pinoPretty from 'pino-pretty';
+import pino from "pino";
+import pinoPretty from "pino-pretty";
+import { Request, Response } from "express";
 
 const app = express();
 const logger = pino(pinoPretty());
+
+// Интерфейс для тикета на сервере
+interface Ticket {
+  id: string;
+  name: string;
+  description: string;
+  status: boolean;
+  created: number;
+}
 
 app.use(cors());
 app.use(
@@ -19,11 +27,11 @@ app.use(
   })
 );
 app.use((req, res, next) => {
-  res.setHeader('Content-Type', 'application/json');
+  res.setHeader("Content-Type", "application/json");
   next();
 });
 
-let tickets = [
+let tickets: Ticket[] = [
   {
     id: crypto.randomUUID(),
     name: "Поменять краску в принтере, ком. 404",
@@ -47,13 +55,21 @@ let tickets = [
   },
 ];
 
-app.use(async (request, response) => {
+app.use(async (request: Request, response: Response) => {
   const { method, id } = request.query;
   switch (method) {
     case "allTickets":
-      logger.info('All tickets has been called');
-      response.send(JSON.stringify(tickets)).end();
+      logger.info("All tickets has been called");
+      // Отправляем только короткую версию тикетов
+      const shortTickets = tickets.map(({ id, name, status, created }) => ({
+        id,
+        name,
+        status,
+        created,
+      }));
+      response.send(JSON.stringify(shortTickets)).end();
       break;
+
     case "ticketById": {
       const ticket = tickets.find((ticket) => ticket.id === id);
       if (!ticket) {
@@ -66,10 +82,11 @@ app.use(async (request, response) => {
       response.send(JSON.stringify(ticket)).end();
       break;
     }
+
     case "createTicket": {
       try {
         const createData = request.body;
-        const newTicket = {
+        const newTicket: Ticket = {
           id: crypto.randomUUID(),
           name: createData.name,
           status: false,
@@ -80,11 +97,17 @@ app.use(async (request, response) => {
         logger.info(`New ticket created: ${JSON.stringify(newTicket)}`);
         response.send(JSON.stringify(newTicket)).end();
       } catch (error) {
-        logger.error(`Error creating new ticket: ${error.message}`);
-        response.status(500).send(JSON.stringify({ error: error.message }));
+        if (error instanceof Error) {
+          logger.error(`Error creating new ticket: ${error.message}`);
+          response.status(500).send(JSON.stringify({ error: error.message })).end();
+        } else {
+          logger.error("An unknown error occurred");
+          response.status(500).send(JSON.stringify({ error: "An unknown error occurred" })).end();
+        }
       }
       break;
     }
+
     case "deleteById": {
       const ticket = tickets.find((ticket) => ticket.id === id);
       if (ticket) {
@@ -100,6 +123,7 @@ app.use(async (request, response) => {
       }
       break;
     }
+
     case "updateById": {
       const ticket = tickets.find((ticket) => ticket.id === id);
       const updateData = request.body;
@@ -116,6 +140,7 @@ app.use(async (request, response) => {
       }
       break;
     }
+
     default:
       logger.warn(`Unknown method: ${method}`);
       response.status(404).end();
@@ -128,7 +153,7 @@ const port = process.env.PORT || 7070;
 const bootstrap = async () => {
   try {
     app.listen(port, () =>
-        logger.info(`Server has been started on http://localhost:${port}`)
+      logger.info(`Server has been started on http://localhost:${port}`)
     );
   } catch (error) {
     console.error(error);

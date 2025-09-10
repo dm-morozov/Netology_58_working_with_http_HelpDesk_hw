@@ -25,7 +25,7 @@ export default class TicketService {
         method: "allTickets",
       },
     })
-      .then((data) => callback(data)) // Когда данные получены, вызываем callback
+      .then((data) => callback(data as TicketShortData[])) // Когда данные получены, вызываем callback
       .catch((error) => {
         console.error("Произошла ошибка при получении списка тикетов:", error);
       });
@@ -41,7 +41,7 @@ export default class TicketService {
         id: id,
       },
     })
-      .then((data) => callback(data))
+      .then((data) => callback(data as TicketData))
       .catch((error) => {
         console.error("Произошла ошибка при получении тикета:", error);
         callback(null); // Если произошла ошибка, возвращаем null
@@ -70,7 +70,7 @@ export default class TicketService {
       // в теле формы name, description, status)
       data: data, // данные для создания тикета такие как имя, описание и статус по заданию
     })
-      .then((data) => callback(data))
+      .then((data) => callback(data as TicketData))
       .catch((error) => {
         console.error("Произошла ошибка при создании тикета:", error);
       });
@@ -93,7 +93,7 @@ export default class TicketService {
       },
       data: data,
     })
-      .then((data) => callback(data))
+      .then((data) => callback(data as TicketData[]))
       .catch((error) => {
         console.error("Произошла ошибка при создании тикета:", error);
       });
