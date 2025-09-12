@@ -73,7 +73,8 @@ export default class HelpDesk {
     console.info("init");
 
     // Инициализируем обработчики
-    this.initEventListeners();
+    // убираем пока, добавили в другое место
+    // this.initEventListeners();
 
     // Мы пока оставим этот вызов, чтобы убедиться, что всё работает
     this.ticketService.list((tickets: TicketShortData[]) => {
