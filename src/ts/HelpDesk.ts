@@ -8,6 +8,7 @@ import { TicketShortData } from "./interface";
 export default class HelpDesk {
   container: HTMLElement;
   ticketService: TicketService;
+  private preloader: HTMLElement | null = null;
 
   // Модальное окно добавления/редактирования
   private modalAddEdit: HTMLElement | null = null;
@@ -35,6 +36,10 @@ export default class HelpDesk {
     }
     this.container = container;
     this.ticketService = ticketService;
+
+    // Решил сделать специально для бесплатного сервера.
+    // Так как его загрузка занимает около 50 секунд
+    this.preloader = document.querySelector(".preloader");
 
     // инициализируем кнопочки
     this.addTicketBtn = document.querySelector(".add-ticket-btn");
@@ -75,6 +80,9 @@ export default class HelpDesk {
   init(): void {
     console.info("init");
 
+    // Показываем прелоадер перед запросом
+    this.showPreloader();
+
     // Уберем отсюда initEventListeners(),
     // так как теперь он в конструкторе
     // this.initEventListeners();
@@ -84,7 +92,20 @@ export default class HelpDesk {
     // Мы пока оставим этот вызов, чтобы убедиться, что всё работает
     this.ticketService.list((tickets: TicketShortData[]) => {
       this.renderTicketList(tickets);
+
+      // Скрываем прелоадер после получения данных
+      this.hidePreloader();
     });
+  }
+
+  // метод для показа прелоадера
+  private showPreloader(): void {
+    this.preloader?.classList.remove("hidden");
+  }
+
+  // метод для скрытия прелоадера
+  private hidePreloader(): void {
+    this.preloader?.classList.add("hidden");
   }
 
   private renderTicketList(tickets: TicketShortData[]): void {
