@@ -190,7 +190,7 @@ export default class HelpDesk {
 
       // обработчик клика на сам тикет
       // Теперь он может обращаться к ticketDescription, так как тот уже создан
-      ticketElement.addEventListener("dblclick", () => {
+      ticketElement.addEventListener("click", () => {
         // Если описание тикета видно, скрываем его
         if (ticketDescription.classList.contains("visible")) {
           ticketDescription.classList.remove("visible");
