@@ -36,7 +36,7 @@ jobs:
           node-version: 20
           cache: 'npm'
       - run: npm install --frozen-lockfile
-      - run: npm test
+      - run: npm run test
 
   build:
     needs: [eslint, test]
@@ -51,7 +51,7 @@ jobs:
           node-version: 20
           cache: 'npm'
       - run: npm install --frozen-lockfile
-      - run: npm build
+      - run: npm run build
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact
