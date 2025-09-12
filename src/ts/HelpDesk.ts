@@ -147,7 +147,7 @@ export default class HelpDesk {
 
       // Добавляем обработчик dblclick для галочки,
       // чтобы остановить всплытие
-      statusIndicator.addEventListener("dblclick", (event) => {
+      statusIndicator.addEventListener("click", (event) => {
         event.stopPropagation(); // Останавливаем всплытие события
       });
 
