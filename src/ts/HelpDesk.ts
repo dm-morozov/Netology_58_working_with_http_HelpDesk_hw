@@ -81,7 +81,7 @@ export default class HelpDesk {
     });
   }
 
-private renderTicketList(tickets: TicketShortData[]): void {
+  private renderTicketList(tickets: TicketShortData[]): void {
     console.log(this.container);
     console.log("Список тикетов получен:", tickets);
 
@@ -93,126 +93,132 @@ private renderTicketList(tickets: TicketShortData[]): void {
     ticketsList.classList.add("tickets-list");
 
     tickets.forEach((ticket) => {
-        console.log(ticket);
-        const ticketElement = document.createElement("div");
-        ticketElement.classList.add("ticket");
-        ticketElement.dataset.id = ticket.id;
+      console.log(ticket);
+      const ticketElement = document.createElement("div");
+      ticketElement.classList.add("ticket");
+      ticketElement.dataset.id = ticket.id;
 
-        // Создаем новый контейнер для шапки тикета
-        const ticketHeader = document.createElement("div");
-        ticketHeader.classList.add("ticket-header");
+      // Создаем новый контейнер для шапки тикета
+      const ticketHeader = document.createElement("div");
+      ticketHeader.classList.add("ticket-header");
 
-        const ticketStatus = document.createElement("div");
-        ticketStatus.classList.add("ticket-status");
-        const statusIndicator = document.createElement("input");
-        statusIndicator.type = "checkbox";
-        statusIndicator.checked = ticket.status;
-        statusIndicator.classList.add("status-indicator");
-        ticketStatus.append(statusIndicator);
+      const ticketStatus = document.createElement("div");
+      ticketStatus.classList.add("ticket-status");
+      const statusIndicator = document.createElement("input");
+      statusIndicator.type = "checkbox";
+      statusIndicator.checked = ticket.status;
+      statusIndicator.classList.add("status-indicator");
+      ticketStatus.append(statusIndicator);
 
-        // Обработчик для изменения статуса
-        statusIndicator.addEventListener('change', () => {
-            const newStatus = statusIndicator.checked;
-            this.ticketService.update(ticket.id, { status: newStatus }, () => {
-                console.log(`Статус тикета ${ticket.id} обновлен на ${newStatus}`);
-            });
+      // Обработчик для изменения статуса
+      statusIndicator.addEventListener("change", () => {
+        const newStatus = statusIndicator.checked;
+        this.ticketService.update(ticket.id, { status: newStatus }, () => {
+          console.log(`Статус тикета ${ticket.id} обновлен на ${newStatus}`);
         });
+      });
 
-        // Добавляем обработчик dblclick для галочки, 
-        // чтобы остановить всплытие
-        statusIndicator.addEventListener('dblclick', (event) => {
-            event.stopPropagation(); // Останавливаем всплытие события
+      // Добавляем обработчик dblclick для галочки,
+      // чтобы остановить всплытие
+      statusIndicator.addEventListener("dblclick", (event) => {
+        event.stopPropagation(); // Останавливаем всплытие события
+      });
+
+      const ticketInfo = document.createElement("div");
+      ticketInfo.classList.add("ticket-info");
+      const ticketName = document.createElement("span");
+      ticketName.classList.add("ticket-name");
+      ticketName.textContent = ticket.name;
+      const ticketDate = document.createElement("span");
+      ticketDate.classList.add("ticket-date");
+      // Выводим дату в формате: 01.01.2025 12:00
+      ticketDate.textContent = new Date(ticket.created).toLocaleString(
+        "ru-RU",
+        {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        },
+      );
+      ticketInfo.append(ticketName, ticketDate);
+
+      const ticketActions = document.createElement("div");
+      ticketActions.classList.add("ticket-actions");
+      const editBtn = document.createElement("button");
+      editBtn.classList.add("edit-btn");
+      editBtn.textContent = "✎";
+      const deleteBtn = document.createElement("button");
+      deleteBtn.classList.add("delete-btn");
+      deleteBtn.textContent = "✖";
+      ticketActions.append(editBtn, deleteBtn);
+
+      // Элемент для полного описания при двойном нажатии
+      const ticketDescription = document.createElement("p");
+      ticketDescription.classList.add("ticket-description");
+
+      // Обработчики событий добавляем после того, как все элементы созданы
+      // Добавляем обработчик для кнопки редактирования
+      editBtn.addEventListener("click", (event) => {
+        event.stopPropagation(); // отменяем всплытие события
+
+        this.ticketService.get(ticket.id, (fullTicket) => {
+          // в списке тикетов (TicketShortData) у нас нет полного описания, как по заданию
+          // по этому мы отдельно получаем полное описание тикета по его id
+          // обращаясь к серверу
+          // Когда данные получены, вызываем метод для показа модалки
+          this.showAddEditModal(
+            fullTicket?.id,
+            fullTicket?.name,
+            fullTicket?.description,
+          );
         });
+      });
 
-        const ticketInfo = document.createElement("div");
-        ticketInfo.classList.add("ticket-info");
-        const ticketName = document.createElement("span");
-        ticketName.classList.add("ticket-name");
-        ticketName.textContent = ticket.name;
-        const ticketDate = document.createElement("span");
-        ticketDate.classList.add("ticket-date");
-        // Выводим дату в формате: 01.01.2025 12:00
-        ticketDate.textContent = new Date(ticket.created).toLocaleString(
-            "ru-RU", {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-            },
-        );
-        ticketInfo.append(ticketName, ticketDate);
+      // Добавляем обработчик для кнопки удаления
+      deleteBtn.addEventListener("click", (event) => {
+        event.stopPropagation(); // отменяем всплытие события
+        this.showDeleteModal(ticket.id, ticket.name);
+      });
 
-        const ticketActions = document.createElement("div");
-        ticketActions.classList.add("ticket-actions");
-        const editBtn = document.createElement("button");
-        editBtn.classList.add("edit-btn");
-        editBtn.textContent = "✎";
-        const deleteBtn = document.createElement("button");
-        deleteBtn.classList.add("delete-btn");
-        deleteBtn.textContent = "✖";
-        ticketActions.append(editBtn, deleteBtn);
-
-        // Элемент для полного описания при двойном нажатии
-        const ticketDescription = document.createElement("p");
-        ticketDescription.classList.add("ticket-description");
-
-        // Обработчики событий добавляем после того, как все элементы созданы
-        // Добавляем обработчик для кнопки редактирования
-        editBtn.addEventListener("click", (event) => {
-            event.stopPropagation(); // отменяем всплытие события
-
-            this.ticketService.get(ticket.id, (fullTicket) => {
-                // в списке тикетов (TicketShortData) у нас нет полного описания, как по заданию
-                // по этому мы отдельно получаем полное описание тикета по его id
-                // обращаясь к серверу
-                // Когда данные получены, вызываем метод для показа модалки
-                this.showAddEditModal(fullTicket?.id, fullTicket?.name, fullTicket?.description);
-            });
-        });
-
-        // Добавляем обработчик для кнопки удаления
-        deleteBtn.addEventListener("click", (event) => {
-            event.stopPropagation(); // отменяем всплытие события
-            this.showDeleteModal(ticket.id, ticket.name);
-        });
-
-        // обработчик клика на сам тикет
-        // Теперь он может обращаться к ticketDescription, так как тот уже создан
-        ticketElement.addEventListener("dblclick", () => {
-          // Если описание тикета видно, скрываем его
-          if (ticketDescription.classList.contains("visible")) {
-            ticketDescription.classList.remove("visible");
-            ticketDescription.textContent = "";
-          } else {
-            // Если нет, то получаем полное описание с сервера
-            this.ticketService.get(ticket.id, (fullTicket) => {
-              if (fullTicket) {
-                // Проверяем, есть ли описание у тикета
-                if(fullTicket.description.trim() === "") {
-                  ticketDescription.textContent = "Нажмите на кнопку редактирования ✎ , чтобы добавить описание.";
-                  ticketDescription.classList.add("empty-description");
-                } else {
-                  ticketDescription.textContent = fullTicket.description;
-                  ticketDescription.classList.remove("empty-description");
-                }
-                ticketDescription.classList.add("visible");
+      // обработчик клика на сам тикет
+      // Теперь он может обращаться к ticketDescription, так как тот уже создан
+      ticketElement.addEventListener("dblclick", () => {
+        // Если описание тикета видно, скрываем его
+        if (ticketDescription.classList.contains("visible")) {
+          ticketDescription.classList.remove("visible");
+          ticketDescription.textContent = "";
+        } else {
+          // Если нет, то получаем полное описание с сервера
+          this.ticketService.get(ticket.id, (fullTicket) => {
+            if (fullTicket) {
+              // Проверяем, есть ли описание у тикета
+              if (fullTicket.description.trim() === "") {
+                ticketDescription.textContent =
+                  "Нажмите на кнопку редактирования ✎ , чтобы добавить описание.";
+                ticketDescription.classList.add("empty-description");
+              } else {
+                ticketDescription.textContent = fullTicket.description;
+                ticketDescription.classList.remove("empty-description");
               }
-            });
-          }
-        });
+              ticketDescription.classList.add("visible");
+            }
+          });
+        }
+      });
 
-        // Собираем шапку в один контейнер
-        ticketHeader.append(ticketStatus, ticketInfo, ticketActions);
+      // Собираем шапку в один контейнер
+      ticketHeader.append(ticketStatus, ticketInfo, ticketActions);
 
-        // Собираем все элементы в правильном порядке
-        ticketElement.append(ticketHeader, ticketDescription);
+      // Собираем все элементы в правильном порядке
+      ticketElement.append(ticketHeader, ticketDescription);
 
-        ticketsList.append(ticketElement);
+      ticketsList.append(ticketElement);
     });
 
     this.container.append(ticketsList);
-}
+  }
 
   // Общие методы для показа/скрытия модальных окон
   private showModal(modalElement: HTMLElement | null): void {
@@ -224,11 +230,17 @@ private renderTicketList(tickets: TicketShortData[]): void {
   }
 
   // Метод для отображения модального окна "Добавить тикет"
-  private showAddEditModal(id: string | null = null, name: string = "", description: string = ""): void {
+  private showAddEditModal(
+    id: string | null = null,
+    name: string = "",
+    description: string = "",
+  ): void {
     if (this.modalTitleAddEdit)
       // проверим есть ли id, если есть, значит мы редактируем тикет
-      this.modalTitleAddEdit.textContent = id ? "Редактировать тикет" : "Добавить тикет";
-    
+      this.modalTitleAddEdit.textContent = id
+        ? "Редактировать тикет"
+        : "Добавить тикет";
+
     if (this.nameInputAddEdit) this.nameInputAddEdit.value = name;
 
     if (this.descriptionTextareaAddEdit)
@@ -250,9 +262,9 @@ private renderTicketList(tickets: TicketShortData[]): void {
   private initEventListeners(): void {
     // Обработчики для модального окна добавления/редактирования
     this.addTicketBtn?.addEventListener("click", () => {
-        // Сбрасываем id, чтобы модалка работала в режиме добавления
-        this.currentTicketId = null;
-        this.showAddEditModal();
+      // Сбрасываем id, чтобы модалка работала в режиме добавления
+      this.currentTicketId = null;
+      this.showAddEditModal();
     });
 
     this.closeBtnAddEdit?.addEventListener("click", () =>
