@@ -67,14 +67,19 @@ export default class HelpDesk {
         ".delete-ticket-name",
       );
     }
+
+    // Инициализируем обработчики
+    this.initEventListeners();
   }
 
   init(): void {
     console.info("init");
 
-    // Инициализируем обработчики
-    // убираем пока, добавили в другое место
+    // Уберем отсюда initEventListeners(),
+    // так как теперь он в конструкторе
     // this.initEventListeners();
+    // происходило дублировании при переинициализации
+    // например когда создавал новый тикет
 
     // Мы пока оставим этот вызов, чтобы убедиться, что всё работает
     this.ticketService.list((tickets: TicketShortData[]) => {
@@ -302,12 +307,16 @@ export default class HelpDesk {
       if (this.currentTicketId) {
         this.ticketService.update(this.currentTicketId, data, () => {
           this.hideModal(this.modalAddEdit);
-          this.init();
+          // this.init();
+          // Просто обновляем список, не вызывая init()
+          this.ticketService.list((tickets) => this.renderTicketList(tickets));
         });
       } else {
         this.ticketService.create(data, () => {
           this.hideModal(this.modalAddEdit);
-          this.init();
+          // this.init();
+          // Просто обновляем список, не вызывая init()
+          this.ticketService.list((tickets) => this.renderTicketList(tickets));
         });
       }
     }
@@ -317,7 +326,9 @@ export default class HelpDesk {
     if (this.currentTicketId) {
       this.ticketService.delete(this.currentTicketId, () => {
         this.hideModal(this.modalDelete);
-        this.init();
+        // this.init();
+        // Просто обновляем список, не вызывая init()
+        this.ticketService.list((tickets) => this.renderTicketList(tickets));
       });
     }
   }
