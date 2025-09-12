@@ -1,3 +1,5 @@
+// server.ts
+
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
@@ -43,7 +45,7 @@ let tickets: Ticket[] = [
     id: crypto.randomUUID(),
     name: "Переустановить Windows, PC-Hall24",
     description: "",
-    status: false,
+    status: true,
     created: Date.now(),
   },
   {
