@@ -30,6 +30,8 @@ export default class HelpDesk {
   // Временное хранилище для ID тикета, который нужно удалить
   private currentTicketId: string | null = null;
 
+  private currentTicketStatus: boolean | null = null;
+
   constructor(container: HTMLElement, ticketService: TicketService) {
     if (!(container instanceof HTMLElement)) {
       throw new Error("This is not HTML element!");
@@ -199,6 +201,7 @@ export default class HelpDesk {
             fullTicket?.id,
             fullTicket?.name,
             fullTicket?.description,
+            fullTicket?.status,
           );
         });
       });
@@ -261,6 +264,7 @@ export default class HelpDesk {
     id: string | null = null,
     name: string = "",
     description: string = "",
+    status: boolean = false,
   ): void {
     if (this.modalTitleAddEdit)
       // проверим есть ли id, если есть, значит мы редактируем тикет
@@ -275,6 +279,7 @@ export default class HelpDesk {
 
     // Сохраняем id тикета для последующей отправки
     this.currentTicketId = id;
+    this.currentTicketStatus = status;
 
     this.showModal(this.modalAddEdit);
   }
@@ -322,7 +327,7 @@ export default class HelpDesk {
       const data = {
         name: this.nameInputAddEdit.value,
         description: this.descriptionTextareaAddEdit.value,
-        status: false,
+        status: this.currentTicketStatus as boolean,
       };
 
       if (this.currentTicketId) {
