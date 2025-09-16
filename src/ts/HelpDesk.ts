@@ -275,7 +275,10 @@ export default class HelpDesk {
         ? "Редактировать тикет"
         : "Добавить тикет";
 
-    if (this.nameInputAddEdit) this.nameInputAddEdit.value = name;
+    if (this.nameInputAddEdit) {
+      this.nameInputAddEdit.focus();
+      this.nameInputAddEdit.value = name;
+    }
 
     if (this.descriptionTextareaAddEdit)
       this.descriptionTextareaAddEdit.value = description;
