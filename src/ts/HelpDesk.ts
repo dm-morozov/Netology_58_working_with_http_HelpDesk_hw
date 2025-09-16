@@ -158,19 +158,22 @@ export default class HelpDesk {
       const ticketName = document.createElement("span");
       ticketName.classList.add("ticket-name");
       ticketName.textContent = ticket.name;
-      const ticketDate = document.createElement("span");
+
+      // Добавляем дату
+      const ticketDate = document.createElement("time");
       ticketDate.classList.add("ticket-date");
+
+      const fullDate = new Date(ticket.created);
+      ticketDate.setAttribute("datetime", fullDate.toISOString());
+
       // Выводим дату в формате: 01.01.2025 12:00
-      ticketDate.textContent = new Date(ticket.created).toLocaleString(
-        "ru-RU",
-        {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        },
-      );
+      ticketDate.textContent = fullDate.toLocaleString("ru-RU", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
       ticketInfo.append(ticketName, ticketDate);
 
       const ticketActions = document.createElement("div");
